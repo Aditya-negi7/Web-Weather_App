@@ -117,8 +117,41 @@ function getLocation() {
         navigator.geolocation.getCurrentPosition(showPosition);
     }
     else {
-        //HW - show an alert for no gelolocation support available
+        grantAccessBtn.style.display = "none";
+        messageText.innerText = "Geolocation is not supported by this browser.";
     }
+}
+
+// Handle any errors
+function showError(error) {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        messageText.innerText = "You denied the request for Geolocation.";
+        break;
+      case error.POSITION_UNAVAILABLE:
+        messageText.innerText = "Location information is unavailable.";
+        break;
+      case error.TIMEOUT:
+        messageText.innerText = "The request to get user location timed out.";
+        break;
+      case error.UNKNOWN_ERROR:
+        messageText.innerText = "An unknown error occurred.";
+        break;
+    }
+}
+
+//check if cordinates are already present in session storage
+function getfromSessionStorage() {
+    const localCoordinates = sessionStorage.getItem("user-coordinates");
+    if(!localCoordinates) {
+        //agar local coordinates nahi mile
+        grantAccessContainer.classList.add("active");
+    }
+    else {
+        const coordinates = JSON.parse(localCoordinates);
+        fetchUserWeatherInfo(coordinates);
+    }
+
 }
 
 
